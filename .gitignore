@@ -4,3 +4,4 @@ master.csv
 data/clean.csv
 data/player.csv
 data/average_stats.csv
+*.csv
