@@ -1,4 +1,15 @@
 # League of Legends API and data exploration
-- practice of requests from a RESTful API 
-- practice of cleaning and combining dataframes
-- some data vis
+
+This project explores the fundamentals of retrieving information from an API, working around the limitations of available information to build up a database of information, and dabbles in visualizing patterns and trends in that data.
+
+The initial question I had in mind when beginning this project was whether a win could be predicted based off of team compositions. Of course, this has been done before with little success, but as the primary intent is learning the systems involved in developing such a predictive model, that issue may be put to the side.
+
+Thus, utilizing Riot Game's API to retrieve game data was the first step. The only ways to retrieve a match data by using its ID or finding a random current match. Match IDs can be found in a player's match history, which can be retrieved if you know the player's summoner id, which can be retrieved if you know the player's username ... of which a large list of such usernames can be compiled from getting the member list of players at a specific tier. This iterative process of API requests based on a previous API request is relatively straightforward if finding a specific case, but the number of requests grows exponentially. Still, with some sets and dictionaries, the requests can be streamlined. By retrieving from Challenger, Grandmaster, and Master tier, I compiled a list of usernames transformed it into summoner id. Then I used that list to get all the match histories, of which overlap needed to be accounted for due to players in the same match. After that was dealt with, I used the match ids to compile tens of thousands of matches, each with a thousand plus features.
+
+The functions used to perform those requests in accordance with Riot's personal API key rate limitation are stored in the api folder. I created a class in order to simplify using the functions for differing regions and tiers, although given the rate limitation, run time for later steps like building the match list and retrieving the match information may take hours.
+
+The next step was data cleaning. Although I retrieved data based on players in the highest skill tiers of the game, their match histories do not fully reflect that fact, as there are multiple game modes. That is easy to account for by filtering the games to ranked classic games, though compilation was still an issue due to differing amounts of features retrieved for different matches. After flattening some jsons and dropping columns with too many nulls, extensive amounts of features were still left.
+
+At this point, the purpose of the project shifted towards generating new features and visualizing information based on roles and performance, such as damage per minute against gold per minute. Moreover, by reiterating over the somewhat messy naming of the original dataframe, I generated a longer dataframe based on individual players rather than the match itself, which allowed comparisons of individual players against each other, and their average performance via groupby.
+
+The next step I would have taken would have been to isolate the numerical ids for the runes and generate win rates of runes by other factors such as champion or role, along with all the items. However, in light of the items rework next season, and the limited data I have access to via personal API requests, such data generated is suboptimal. Besides that, given that I retrieved data from all major regions (excluding China), comparing performances of players between regions is another possible way forward using the available data.
